@@ -46,6 +46,14 @@ export default function LicensesPage() {
     const [editingLicense, setEditingLicense] = useState<any>(null);
     const [editExpiryDate, setEditExpiryDate] = useState('');
 
+    // Feedback State
+    const [toast, setToast] = useState<{message: string, type: 'success' | 'error'} | null>(null);
+
+    const showToast = (message: string, type: 'success' | 'error') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 5000);
+    };
+
     async function fetchLicenses() {
         setLoading(true);
         try {
@@ -170,10 +178,11 @@ export default function LicensesPage() {
             await fetchLicenses();
             setShowGenerateModal(false);
 
+            let emailSent = false;
             // Send License Email if an email address is provided
             if (payload.owner_email) {
                 try {
-                    await fetch('/api/send-license', {
+                    const res = await fetch('/api/send-license', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -184,6 +193,7 @@ export default function LicensesPage() {
                             expiryDays: newExpiryDays
                         })
                     });
+                    if (res.ok) emailSent = true;
                 } catch (e) {
                     console.error('Failed to trigger license email', e);
                 }
@@ -196,10 +206,18 @@ export default function LicensesPage() {
             setNewMaxMachines(1);
             setNewExpiryDays('365');
             setSelectedLeadId('');
+
+            if (payload.owner_email && emailSent) {
+                showToast(`Node Provisioned! Key & Setup successfully sent to ${payload.owner_email}.`, 'success');
+            } else if (payload.owner_email && !emailSent) {
+                showToast(`Node Provisioned! However, the email failed to send.`, 'error');
+            } else {
+                showToast(`Node Provisioned successfully!`, 'success');
+            }
             
         } catch (err: any) {
             console.error('Failed to generate license:', err);
-            alert(`Failed to generate license. Ensure the desktop_licenses table is created. Error: ${err.message}`);
+            showToast(`Failed to provision node: ${err.message}`, 'error');
         } finally {
             setGenerating(false);
         }
@@ -644,6 +662,17 @@ export default function LicensesPage() {
                             </div>
                         </form>
                     </div>
+                </div>
+            )}
+
+            {/* Toast Notification */}
+            {toast && (
+                <div className={cn(
+                    "fixed bottom-6 right-6 z-[200] max-w-sm px-6 py-4 rounded-2xl shadow-2xl font-bold flex items-center gap-3 transition-all animate-in slide-in-from-bottom-5",
+                    toast.type === 'success' ? "bg-green-500/20 text-green-400 border border-green-500/30 backdrop-blur-md" : "bg-red-500/20 text-red-400 border border-red-500/30 backdrop-blur-md"
+                )}>
+                    {toast.type === 'success' ? <CheckCircle2 className="h-6 w-6 flex-shrink-0" /> : <XCircle className="h-6 w-6 flex-shrink-0" />}
+                    <p className="text-sm leading-tight">{toast.message}</p>
                 </div>
             )}
         </div>
