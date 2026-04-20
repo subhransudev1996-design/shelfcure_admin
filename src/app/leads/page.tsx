@@ -426,7 +426,7 @@ export default function LeadsPage() {
                 else if (conversionData.expiry_days === '730') planText = '2-Year Subscription';
                 else if (conversionData.expiry_days === 'lifetime') planText = 'Lifetime Access';
 
-                await fetch('/admin/api/send-license', {
+                await fetch('/api/send-license', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

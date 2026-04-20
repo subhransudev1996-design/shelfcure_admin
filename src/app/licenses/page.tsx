@@ -173,7 +173,7 @@ export default function LicensesPage() {
             // Send License Email if an email address is provided
             if (payload.owner_email) {
                 try {
-                    await fetch('/admin/api/send-license', {
+                    await fetch('/api/send-license', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

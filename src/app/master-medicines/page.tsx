@@ -192,7 +192,7 @@ export default function MasterMedicinePage() {
         for (let i = 0; i < csvRows.length; i += CHUNK) {
             const chunk = csvRows.slice(i, i + CHUNK);
             try {
-                const res = await fetch('/admin/api/master-medicines/bulk-upload', {
+                const res = await fetch('/api/master-medicines/bulk-upload', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ rows: chunk }),
