@@ -23,15 +23,6 @@ export async function POST(request: Request) {
         else if (expiryDays === '730') planText = '2-Year Subscription';
         else if (expiryDays === 'lifetime') planText = 'Lifetime Access';
 
-        // Read the logo from public folder
-        let logoBase64: string | null = null;
-        try {
-            const logoBuffer = fs.readFileSync(path.join(process.cwd(), 'public', 'logo.png'));
-            logoBase64 = logoBuffer.toString('base64');
-        } catch (err) {
-            console.error("Failed to read logo.png", err);
-        }
-
         const htmlContent = `
         <!DOCTYPE html>
         <html>
@@ -47,7 +38,7 @@ export async function POST(request: Request) {
                             <!-- Header -->
                             <tr>
                                 <td style="background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 40px 30px; text-align: center;">
-                                    ${logoBase64 ? `<img src="data:image/png;base64,${logoBase64}" alt="Shelfcure Logo" style="height: 60px; max-width: 100%; display: block; margin: 0 auto;" />` : `<h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: -0.5px;">Shelfcure</h1>`}
+                                    <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: -0.5px;">Shelfcure</h1>
                                     <p style="color: #a5b4fc; margin: 15px 0 0 0; font-size: 16px;">Next-Generation Pharmacy Intelligence</p>
                                 </td>
                             </tr>
