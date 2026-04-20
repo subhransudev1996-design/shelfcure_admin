@@ -5,7 +5,7 @@ import path from 'path';
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
-const DOWNLOAD_URL = process.env.SHELFCURE_DOWNLOAD_URL || 'https://shelfcure.com/downloads/ShelfCure_Setup.exe';
+const DOWNLOAD_URL = process.env.SHELFCURE_DOWNLOAD_URL || 'https://admins.shelfcure.com/downloads/ShelfCure_setup.exe';
 
 export async function POST(request: Request) {
     try {
